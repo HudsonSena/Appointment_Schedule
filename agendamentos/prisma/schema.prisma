@@ -13,3 +13,33 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id                       String        @id @default(cuid())
+  name                     String        @db.VarChar(255)
+  email                    String        @unique
+  password                 String
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @default(now())
+  username                 String        @unique
+  status                   String        @default("Offline")
+  role                     String // 'cliente' ou 'profissional'
+  userAppointments         Appointment[] @relation("UserAppointments")
+  professionalAppointments Appointment[] @relation("ProfessionalAppointments")
+
+  @@map("users")
+}
+
+model Appointment {
+  id             String   @id @default(uuid())
+  date           DateTime
+  userId         String
+  professionalId String
+  user           User     @relation("UserAppointments", fields: [userId], references: [id])
+  professional   User     @relation("ProfessionalAppointments", fields: [professionalId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
