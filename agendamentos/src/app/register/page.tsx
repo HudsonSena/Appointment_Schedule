@@ -1,4 +1,4 @@
-import { InputForm } from "../form/page";
+import { InputForm } from "../formRegister/page";
 
 export default function Register(){
     return(
